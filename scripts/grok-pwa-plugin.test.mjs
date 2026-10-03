@@ -235,12 +235,12 @@ test("does not emit x:game:image without a public host or banner", () => {
   assert.doesNotMatch(noBanner, /x:game:image/);
 });
 
-test("site title Grok App is a real name, not a sentinel", () => {
+test("site title Quiet Zone is a real name, not a sentinel", () => {
   const out = injectGrokPwaHead("<html><head></head></html>", {
     host: "wild-race.grok.me",
-    site: { title: "Grok App" },
+    site: { title: "Quiet Zone" },
   });
-  assert.match(out, /property="og:title" content="Grok App"/);
+  assert.match(out, /property="og:title" content="Quiet Zone"/);
 });
 
 test("published grok.me slug is still a title fallback", () => {
@@ -251,7 +251,7 @@ test("published grok.me slug is still a title fallback", () => {
 });
 
 test("rejects Vercel system hosts as og:image origins", () => {
-  assert.equal(publicAppHost("01a020b6-803a-71a2-bb47-e2bec57eb9a2-662k8x1l1-xai-org.vercel.app"), "");
+  assert.equal(publicAppHost("01a020b6-803a-71a2-bb47-e2bec57eb9a2-662k8x1l1-example-org.vercel.app"), "");
   assert.equal(publicAppHost("demo.vercel.app:443"), "");
   assert.equal(publicAppHost("vercel.app"), "");
   assert.equal(publicAppHost("wild-race.grok.me"), "wild-race.grok.me");
@@ -262,7 +262,7 @@ test("published VITE_PUBLIC_HOSTNAME wins over request Host for og:image", () =>
   process.env.VITE_PUBLIC_HOSTNAME = "plum-plaza-reef-dream.grok.me";
   try {
     const vercelHost = injectGrokPwaHead("<html><head><title>RACK</title></head></html>", {
-      host: "01a020b6-803a-71a2-bb47-e2bec57eb9a2-662k8x1l1-xai-org.vercel.app",
+      host: "01a020b6-803a-71a2-bb47-e2bec57eb9a2-662k8x1l1-example-org.vercel.app",
       site: { title: "RACK", card: "custom" },
     });
     assert.match(
@@ -291,7 +291,7 @@ test("vercel Host without a public hostname emits no og:image", () => {
   delete process.env.VITE_PUBLIC_HOSTNAME;
   try {
     const out = injectGrokPwaHead("<html><head><title>RACK</title></head></html>", {
-      host: "01a020b6-803a-71a2-bb47-e2bec57eb9a2-662k8x1l1-xai-org.vercel.app",
+      host: "01a020b6-803a-71a2-bb47-e2bec57eb9a2-662k8x1l1-example-org.vercel.app",
       site: { title: "RACK", card: "custom" },
     });
     assert.doesNotMatch(out, /property="og:image"/);
@@ -449,14 +449,14 @@ test("strips install params from the app link", () => {
 });
 
 test("names the install page from host slug", () => {
-  assert.equal(appNameFromHost("localhost:8080"), "Grok App");
-  assert.equal(appNameFromHost("172.17.154.217:8080"), "Grok App");
+  assert.equal(appNameFromHost("localhost:8080"), "Quiet Zone");
+  assert.equal(appNameFromHost("172.17.154.217:8080"), "Quiet Zone");
   assert.equal(appNameFromHost("wild-race.grok.me"), "Wild Race");
 });
 
 test("rejects hosts that are not plain slugs", () => {
-  assert.equal(appNameFromHost("<script>alert(1)</script>"), "Grok App");
-  assert.equal(appNameFromHost('"><img src=x onerror=1>.grok.me'), "Grok App");
+  assert.equal(appNameFromHost("<script>alert(1)</script>"), "Quiet Zone");
+  assert.equal(appNameFromHost('"><img src=x onerror=1>.grok.me'), "Quiet Zone");
 });
 
 test("renders install page markup", () => {

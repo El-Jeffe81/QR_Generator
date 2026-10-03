@@ -1,5 +1,5 @@
 /**
- * Client-readable marker for gate-materialized sessions ("Sign in with Grok"
+ * Client-readable marker for gate-materialized sessions ("Sign in with builder"
  * zero-click sessions minted by `gate-session.server.ts`). Signing out of a
  * gate session is a no-op — the next request re-materializes it from
  * `x-grok-identity` — so `UserButton` uses this to hide its sign-out control.

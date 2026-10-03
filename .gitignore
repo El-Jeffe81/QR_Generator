@@ -1,8 +1,9 @@
 node_modules
-.vercel
-screenshots
-artifacts
-.grok
+/.vercel
+/screenshots
+/artifacts
+/.grok
 *.log
+!/can_delete/**/*.log
 .node_modules.lock
 dist

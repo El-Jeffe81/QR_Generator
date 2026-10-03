@@ -84,7 +84,7 @@ type PopupMessage = { source: "grok-auth-popup"; token: string | null; error?: s
 
 /**
  * Start sign-in with one upstream provider (`providerId` from `GROK_PROVIDERS`),
- * federating through the Grok auth broker.
+ * federating through the builder auth broker.
  *
  * - **Live preview** (`*.grok-sandbox.com` iframe): opens a POPUP to
  *   `/auth/popup`, served by the template Vite plugin (see `vite.config.ts` +

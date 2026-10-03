@@ -1,7 +1,7 @@
 /**
  * Guest side of the grok-web ↔ sandbox preview postMessage bridge.
  *
- * Activates only when this page is framed by an allowlisted Grok embedder.
+ * Activates only when this page is framed by an allowlisted builder embedder.
  * Top-level runs (download/export, local `npm run dev`, deployed sites) noop.
  */
 
@@ -62,9 +62,9 @@ export function isSafeBridgePath(path: string): boolean {
 }
 
 /**
- * Origin of the Grok embedder framing this page, or null when the page runs
+ * Origin of the builder embedder framing this page, or null when the page runs
  * top-level (download/export, local `npm run dev`, deployed sites) or under a
- * non-Grok parent. Client-only; null during SSR.
+ * non-builder parent. Client-only; null during SSR.
  */
 export function resolveCurrentEmbedderOrigin(): string | null {
   if (typeof window === "undefined") return null;
@@ -82,7 +82,7 @@ export function resolveCurrentEmbedderOrigin(): string | null {
 
 /**
  * Install host↔guest messaging. Returns a dispose function.
- * Noops (returns a no-op dispose) when not embedded under a Grok parent.
+ * Noops (returns a no-op dispose) when not embedded under a builder parent.
  */
 export function installPreviewHostBridge(
   options: PreviewHostBridgeOptions = {},
