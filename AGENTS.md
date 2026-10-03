@@ -5,12 +5,12 @@ the app builder, in an isolated Linux sandbox; read it fully before writing code
 Prompts are often short and casual — read intent generously and ship a
 **playable / demo-quality** product.
 
-**Depth lives in `can_delete/.grok/references/*.md`**, read on demand as skills load
+**Depth lives in `.studio/references/*.md`**, read on demand as skills load
 theirs; the rules below name the file to open at each point it matters.
 
 ---
 
-## Skills (in `can_delete/.grok/skills/` — consult BEFORE building)
+## Skills (in `.studio/skills/` — consult BEFORE building)
 
 Skills are auto-listed with trigger words; open the matching `SKILL.md` (plus
 its `references/`) **before** you build or polish. Routing the triggers miss:
@@ -32,7 +32,7 @@ Gen-tool art: **`generate2dsprite`** (sprites), **`generate2dmap`** (maps),
 **`game-asset-core`** + specialists (doctrine/QC) — but **abstract / geometric
 games (tetris, snake, pong, breakout) stay procedural even when gen tools are
 listed**; generated sheets there are a quality regression. Pipelines:
-`can_delete/.grok/references/generated-art.md`.
+`.studio/references/generated-art.md`.
 
 ---
 
@@ -92,7 +92,7 @@ list, not a judgement call:
   calculators, most one-shot asks).
 
 Once the decision is ON, build from
-`can_delete/.grok/references/data-and-auth.md` plus the `auth` / `neon` skills. **Auth ON ⇒
+`.studio/references/data-and-auth.md` plus the `auth` / `neon` skills. **Auth ON ⇒
 `authMiddleware` on every server function and every query scoped by the
 verified `context.userId`** — never a client-sent id, never a demo/mock user.
 
@@ -135,12 +135,12 @@ back the dev server and anything else the preview needs. **Rules
    shouldn't live in the workspace snapshot.
 6. **Start the app with `npm run dev` — never `vite` / `npx vite` directly**,
    here or during a turn. Only the npm scripts run Vite through
-   `scripts/with-app-env.mjs`, which puts `.grok/app-env.json`
+   `scripts/with-app-env.mjs`, which puts `.studio/app-env.json`
    (`VITE_AUTH_ENABLED`) into the environment.
 
 Starting the dev server during a turn: write/update `startup.sh` first, then run
 `sh /workspace/startup.sh`, so revive and live work stay identical (worked
-example in `can_delete/.grok/references/hibernate-revive.md`).
+example in `.studio/references/hibernate-revive.md`).
 
 ### What is already here
 
@@ -151,9 +151,9 @@ missing. Postgres and Better Auth are pre-wired in `src/lib`, **opt-in per app**
 
 - **Don't recreate `vite.config.ts` / `tsconfig.json`** or import a vendored
   `vite-tanstack-config` preset. Editing? Keep both port contracts, the
-  build/preview-gated nitro plugin and `grokPwaPlugin()`
-  (`can_delete/.grok/references/deploy-target.md`).
-- **Never delete or overwrite `public/__grok/`, `server/`, `scripts/grok-pwa-*`**
+  build/preview-gated nitro plugin and `studioPwaPlugin()`
+  (`.studio/references/deploy-target.md`).
+- **Never delete or overwrite `public/__studio/`, `server/`, `scripts/studio-pwa-*`**
   (platform chrome; `?install=1&platform=ios` serves the install tutorial, not
   app UI) or the pre-wired `src/lib` helpers; your own server routes go in
   `src/routes/`, never `server/`.
@@ -162,20 +162,20 @@ missing. Postgres and Better Auth are pre-wired in `src/lib`, **opt-in per app**
   deploy. **`apt` / `yum` do not work here** — search the docs rather than
   looping on failed installs, and prefer a pure-JS alternative. Install scripts
   are off by default, so a native module that must compile (`better-sqlite3`)
-  needs `GROK_ALLOW_INSTALL_SCRIPTS=1 npm install <pkg>`.
+  needs `STUDIO_ALLOW_INSTALL_SCRIPTS=1 npm install <pkg>`.
 - **The app is deployed to Vercel**, where these fail though locally they don't:
   runtime filesystem writes, server-only Node APIs at import time, dev-only deps,
-  hard-coded hosts/ports/secrets (`can_delete/.grok/references/deploy-target.md`).
+  hard-coded hosts/ports/secrets (`.studio/references/deploy-target.md`).
 - **Never create a `.env` file** — the platform injects `DATABASE_URL` + auth
   creds on deploy; only `VITE_`-prefixed vars reach the browser.
-- **`XAI_API_KEY` in the env** = real, server-only model access spending the **app
-  owner's quota**: read **`xai-api`** first, keep calls user-initiated and
+- **`MODEL_API_KEY` in the env** = real, server-only model access spending the **app
+  owner's quota**: read **`model-api`** first, keep calls user-initiated and
   capped, never mock AI responses.
 
 ### First scaffold — required entry files
 
 `npm run dev` errors until these four exist. **Copy their bodies from
-`can_delete/.grok/references/scaffold.md`** — they match the installed TanStack Start, so
+`.studio/references/scaffold.md`** — they match the installed TanStack Start, so
 don't scaffold from stale priors — and keep each contract:
 
 - **`src/router.tsx`** — a **named `export function getRouter()`** (a default
@@ -193,11 +193,11 @@ don't scaffold from stale priors — and keep each contract:
 
 1. **Never put `og:*` / `twitter:card` in `__root.tsx`** — the PWA injector
    overwrites them on every HTML response.
-2. **Keep the branding injector** — `grokPwaPlugin()` and
-   `server/middleware/grok-pwa.ts` inject
-   `https://grok.com/grok-app-builder/extensions.js`, the "Created with builder /
+2. **Keep the branding injector** — `studioPwaPlugin()` and
+   `server/middleware/studio-pwa.ts` inject
+   `https://studio.example/studio-app-builder/extensions.js`, the "Created with builder /
    Remix" pill. Never strip it, hide the pill with CSS, add that script
-   yourself, or add a CSP that blocks `https://grok.com`.
+   yourself, or add a CSP that blocks `https://studio.example`.
 3. **Keep `<PreviewHostBridge />`** mounted near the top of `<body>`: it lets
    the preview chrome drive the app over `postMessage` and is a silent noop
    everywhere else. Never delete it or strip it "for production".
@@ -213,7 +213,7 @@ don't scaffold from stale priors — and keep each contract:
    inside the popup. Viewers opened from builder are gate-signed-in with zero
    clicks — **never render "Sign in / Re-auth with builder" buttons** outside the
    `app-data` skill's `login` error state. Wiring:
-   `can_delete/.grok/references/data-and-auth.md`.
+   `.studio/references/data-and-auth.md`.
 
 ---
 
@@ -224,7 +224,7 @@ don't scaffold from stale priors — and keep each contract:
 On a **follow-up turn** edit in place: HMR is live, and killing the dev server
 blanks the preview mid-session. Restart it only for `vite.config` / dependency
 changes. Revive, reboot-wipe and the `startup.sh` worked example:
-`can_delete/.grok/references/hibernate-revive.md`.
+`.studio/references/hibernate-revive.md`.
 
 ### Parallel work (subagents / multiple agents)
 
@@ -248,7 +248,7 @@ changes. Revive, reboot-wipe and the `startup.sh` worked example:
    **`generate2dsprite`**; maps/levels → **`generate2dmap`**. When gen tools are
    **not** listed, skip those pipelines and use polished CSS/SVG/canvas/WebGL
    art — do not invent missing `imagine_*` calls. For **any** WASD / vehicle /
-   flight: open **`can_delete/.grok/skills/controls/SKILL.md`** **before** writing movement
+   flight: open **`.studio/skills/controls/SKILL.md`** **before** writing movement
    (A must turn left under a chase cam; do not rely on genre files alone).
    Custom-card app? Dispatch step 6's brand pass **now** — it takes minutes, so
    starting it here is what keeps it off the answer's critical path.
@@ -273,7 +273,7 @@ changes. Revive, reboot-wipe and the `startup.sh` worked example:
    task's output suppresses its completion notification, so the result,
    failure included, would reach nobody; answer without it, one sentence more
    when it wakes you — publish again if they already did, or the live app keeps
-   the placeholder card. Meanwhile it keeps `/workspace/.grok/og-pending` fresh
+   the placeholder card. Meanwhile it keeps `/workspace/.studio/og-pending` fresh
    (stale after 10 minutes), so a mid-task brand warning is no cue to redo its
    work. Unless your own prompt says you *are* the pass — then make the
    assets.
@@ -289,7 +289,7 @@ changes. Revive, reboot-wipe and the `startup.sh` worked example:
    If blank or any console error, fix and re-check.
    **Anything interactive** (click, type, keys, state) — use the preinstalled
    **`agent-browser`** CLI, not a hand-written Playwright script; read
-   `can_delete/.grok/references/browser-qa.md` first.
+   `.studio/references/browser-qa.md` first.
    **Games with movement:** a still frame is not enough — confirm **A = left /
    D = right** while moving forward (`controls` §5c). Flip one steer/roll sign
    if inverted; retest.
