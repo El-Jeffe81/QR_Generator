@@ -2,7 +2,11 @@ node_modules
 /.vercel
 /screenshots
 /artifacts
-/.grok
+/.studio/app-env.json
+/.studio/*.log
+/.studio/*.pid
+/.studio/og-pending
+/.studio/status
 *.log
 !/can_delete/**/*.log
 .node_modules.lock
